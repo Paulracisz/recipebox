@@ -7,9 +7,16 @@ class AddRecipeForm(forms.Form):
     instructions = forms.CharField(widget=forms.Textarea)
     description = forms.CharField(widget=forms.Textarea)
     time_required = forms.CharField(max_length=20)
-    author = forms.ModelChoiceField(queryset=Author.objects.all())
 
 class AddAuthorForm(forms.ModelForm):
+    username = forms.CharField(max_length=240)
+    password = forms.CharField(widget=forms.PasswordInput)
     class Meta:
         model = Author
         fields = ["name"]
+                
+class LogInForm(forms.Form):
+    username = forms.CharField(max_length=240)
+    password = forms.CharField(widget=forms.PasswordInput)
+    
+    

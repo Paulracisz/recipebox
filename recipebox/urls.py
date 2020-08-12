@@ -16,13 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from helloapp.views import index, recipe_details, author_details, recipe_form, author_form
+from helloapp import views
 
 urlpatterns = [
-    path('', index, name='homepage'),
-    path('recipe/<int:recipe_id>/',recipe_details),
-    path('author/<int:author_id>/',author_details),
-    path('addrecipe/', recipe_form, name='newrecipe'),
-    path('addauthor/', author_form, name='newauthor'),
+    path('', views.index, name='homepage'),
+    path('recipe/<int:recipe_id>/',views.recipe_details),
+    path('author/<int:author_id>/',views.author_details),
+    path('addrecipe/', views.recipe_form, name='newrecipe'),
+    path('addauthor/', views.author_form, name='newauthor'),
+    path('login/', views.login_view, name='loginview'),
+    path('logout/', views.logout_view, name='logoutview'),
     path('admin/', admin.site.urls),
 ]
