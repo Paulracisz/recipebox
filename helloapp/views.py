@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.http import HttpResponseForbidden
 
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -46,8 +47,10 @@ def author_form(request):
             if form.is_valid():
                 data = form.cleaned_data
                 new_user = User.objects.create_user(username=data.get("username"), password=data.get("password"))
-                Author.objects.create(name=data.get("username"), user=new_user)
+                Author.objects.create(name=data.get("name"), user=new_user)
             return HttpResponseRedirect(reverse("homepage"))
+    else:
+        return HttpResponseForbidden("You are not authorized to make an author.")
     form = AddAuthorForm()
     return render(request, "generic_form.html", {"form": form}) 
 
