@@ -15,30 +15,26 @@ def index(request):
 
 def recipe_details(request, recipe_id):
     recipe = Recipe.objects.filter(id=recipe_id).first()
-    return render(request, "recipe.html", {"recipes": recipe})
+    fav = "Add Favorite"
+    if recipe in request.user.author.favorites.all():
+        fav = "Remove Favorite"
+    return render(request, "recipe.html", {"recipes": recipe, "Favorite":fav})
 
-def edit_recipe(request, recipe_id):
-    recipe = Recipe.objects.get(id=recipe_id)
-    if request.method == "POST":
-        form = AddRecipeForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            recipe.description = data["description"]
-            recipe.title = data["title"]
-            recipe.instructions = data["instructions"]
-            recipe.time_required = data["time_required"]
-            recipe.save()
-        return HttpResponseRedirect(reverse("recipeDetails", args=[recipe.id]))
+def add_favorite(request, recipe_id):
+    recipe = Recipe.objects.filter(
+        id=recipe_id).first()
+    current_user = request.user
+    if recipe in current_user.author.favorites.all():
+        current_user.author.favorites.remove(recipe)
+        current_user.save()
+    else:
+        current_user.author.favorites.add(recipe)
+        current_user.author.save()
 
-    data = {
-        "title": recipe.title,
-        "description": recipe.description,
-        "instructions": recipe.instructions,
-        "time_required": recipe.time_required
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', "recipe/{{recipe_id}}/"))
 
-    }
-    form = AddRecipeForm(initial=data)
-    return render(request, "generic_form.html", {"form": form})
+def favortie_recipes(request):
+    pass
 
 def author_details(request, author_id):
     author = Author.objects.filter(id=author_id).first()
@@ -60,6 +56,30 @@ def recipe_form(request):
             )
             return HttpResponseRedirect(reverse("homepage"))
     form = AddRecipeForm()
+    return render(request, "generic_form.html", {"form": form})
+
+@login_required
+def edit_recipe(request, recipe_id):
+    recipe = Recipe.objects.get(id=recipe_id)
+    if request.method == "POST":
+        form = AddRecipeForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            recipe.description = data["description"]
+            recipe.title = data["title"]
+            recipe.instructions = data["instructions"]
+            recipe.time_required = data["time_required"]
+            recipe.save()
+        return HttpResponseRedirect(reverse("recipeDetails", args=[recipe.id]))
+
+    data = {
+        "title": recipe.title,
+        "description": recipe.description,
+        "instructions": recipe.instructions,
+        "time_required": recipe.time_required
+
+    }
+    form = AddRecipeForm(initial=data)
     return render(request, "generic_form.html", {"form": form})
 
 @login_required
