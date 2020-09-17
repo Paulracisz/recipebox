@@ -20,7 +20,8 @@ from helloapp import views
 
 urlpatterns = [
     path('', views.index, name='homepage'),
-    path('recipe/<int:recipe_id>/',views.recipe_details),
+    path('recipe/<int:recipe_id>/',views.recipe_details, name = "recipeDetails"),
+    path('editrecipe/<int:recipe_id>/',views.edit_recipe),
     path('author/<int:author_id>/',views.author_details),
     path('addrecipe/', views.recipe_form, name='newrecipe'),
     path('addauthor/', views.author_form, name='newauthor'),

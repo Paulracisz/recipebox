@@ -17,6 +17,29 @@ def recipe_details(request, recipe_id):
     recipe = Recipe.objects.filter(id=recipe_id).first()
     return render(request, "recipe.html", {"recipes": recipe})
 
+def edit_recipe(request, recipe_id):
+    recipe = Recipe.objects.get(id=recipe_id)
+    if request.method == "POST":
+        form = AddRecipeForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            recipe.description = data["description"]
+            recipe.title = data["title"]
+            recipe.instructions = data["instructions"]
+            recipe.time_required = data["time_required"]
+            recipe.save()
+        return HttpResponseRedirect(reverse("recipeDetails", args=[recipe.id]))
+
+    data = {
+        "title": recipe.title,
+        "description": recipe.description,
+        "instructions": recipe.instructions,
+        "time_required": recipe.time_required
+
+    }
+    form = AddRecipeForm(initial=data)
+    return render(request, "generic_form.html", {"form": form})
+
 def author_details(request, author_id):
     author = Author.objects.filter(id=author_id).first()
     owned_recipes = Recipe.objects.filter(author=author)
