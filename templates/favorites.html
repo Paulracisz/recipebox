@@ -1,0 +1,9 @@
+<h1> Favorite Recipes:</h1>
+<button><a href="/">Home</a></button>
+{%for recipe in recipes%}
+<h2>
+    <ul>
+        <li><a href="/recipe/{{recipe.id}}/">{{recipe.title}}</a></li>
+    </ul>
+</h2>
+{%endfor%}
