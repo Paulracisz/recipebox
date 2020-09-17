@@ -1,9 +1,9 @@
 <h1>{{welcome}}</h1>
 <ul>
     {%for recipe in recipes%}
-        <li>
+    <li>
         <a href="/recipe/{{recipe.id}}">{{recipe.title}}</a>
-        </li>
+    </li>
     {%endfor%}
     <br>
     <a href="/addauthor/">Create a new author!</a>

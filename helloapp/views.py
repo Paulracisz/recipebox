@@ -16,10 +16,14 @@ def index(request):
 def recipe_details(request, recipe_id):
     recipe = Recipe.objects.filter(id=recipe_id).first()
     fav = "Add Favorite"
-    if recipe in request.user.author.favorites.all():
-        fav = "Remove Favorite"
-    return render(request, "recipe.html", {"recipes": recipe, "Favorite":fav})
+    visible = False
+    if request.user.is_authenticated:
+        visible = True
+        if recipe in request.user.author.favorites.all():
+            fav = "Remove Favorite"
+    return render(request, "recipe.html", {"recipes": recipe, "Favorite":fav, "status":visible})
 
+@login_required
 def add_favorite(request, recipe_id):
     recipe = Recipe.objects.filter(
         id=recipe_id).first()
@@ -33,8 +37,10 @@ def add_favorite(request, recipe_id):
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', "recipe/{{recipe_id}}/"))
 
-def favortie_recipes(request):
-    pass
+def favortie_recipes(request, author_id):
+    current_user= Author.objects.filter(id=author_id).first()
+    fav_recipes = current_user.favorites.all()
+    return render(request, "favorites.html", {"recipes": fav_recipes})
 
 def author_details(request, author_id):
     author = Author.objects.filter(id=author_id).first()

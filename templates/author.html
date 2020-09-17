@@ -2,7 +2,8 @@
 <h1>Looks like this author does not exist! :(</h1>
 {%else%}
 <h1>{{authors.name}}</h1>
-<h2><a href="/favorites/">My favorite recipes</a></h2>
+<button><a href="/">Home</a></button>
+<h2><a href="/favorites/{{authors.id}}/">My favorite recipes</a></h2>
 <h2>My recipes:</h2>
 {%for recipe in own_recipe%}
 <h3>
